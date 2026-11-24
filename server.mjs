@@ -65,7 +65,8 @@ async fetch(req, env) {
       const month=url.searchParams.get('month');
       if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(month||'')) throw issue('Mês inválido.');
       const [entries,materials]=await Promise.all([query('SELECT * FROM entries WHERE day>=? AND day<=? ORDER BY day,id',month+'-01',month+'-31').all(),query('SELECT * FROM materials ORDER BY name').all()]);
-      return json({session,entries:entries.results,materials:materials.results});
+      const inkItems=await query('SELECT name,microliters FROM ink_items ORDER BY name').all();
+      return json({session,entries:entries.results,materials:materials.results,inkItems:inkItems.results});
     }
     if(req.method==='POST' && path==='logout'){
       await query('DELETE FROM sessions WHERE token=?',await digest(token)).run();

@@ -80,12 +80,17 @@ function render(){
  document.querySelectorAll('[data-tab]').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);b.setAttribute('aria-pressed',b.dataset.tab===tab);});
  let result='';
  if(tab==='HOME') result='<div class="grid">'+[['Lançamentos',number(rows.length)],['Impressões',number(qty(rows))],['Custo de material',totalCost(rows)]].map(([k,v])=>'<section class="glass card"><small>'+k+'</small><strong class="kpi">'+v+'</strong></section>').join('')+'</div><div class="grid charts">'+production(rows)+materials(rows)+'</div>'+table(rows);
- if(tab==='CUSTOS') result=materials(rows)+table(rows);
+ if(tab==='CUSTOS') result=inkConsumption()+materials(rows)+table(rows);
  if(tab==='MATERIAL') result=materials(rows,true);
  if(tab==='DATA') result=production(rows)+table(rows);
  if(tab==='MEDIDAS') result='<section class="glass card"><h2>Impressões por medida</h2>'+([...grouped(rows,r=>number(r.width)+' × '+number(r.height)+' cm')].map(([k,r])=>'<div class="material"><strong>'+k+'</strong><span>'+qty(r)+' impressões · '+number(r.reduce((s,e)=>s+area(e),0))+' m²</span></div>').join('')||'<p>Nenhum lançamento neste período.</p>')+'</section>';
  if(tab==='IMAGENS') result='<section class="glass card"><h2>Imagens registradas</h2>'+ (rows.filter(r=>r.image).map(r=>'<div class="material"><strong>'+esc(r.image)+'</strong><span>'+fmtDate(r.day)+'</span></div>').join('')||'<p>Nenhum nome de imagem informado neste período.</p>')+'</section>';
  $('view').innerHTML=result;
+}
+function inkConsumption(){
+ const items=data.inkItems||[];
+ const ml=new Intl.NumberFormat('pt-BR',{minimumFractionDigits:3,maximumFractionDigits:3});
+ return '<section class="glass card"><h2>Consumo de tinta por impressão</h2><div class="table-wrap"><table><thead><tr><th>Item</th><th>Consumo por impressão (ml)</th></tr></thead><tbody>'+items.map(item=>'<tr><td>'+esc(item.name)+'</td><td>'+ml.format(item.microliters/1000)+' ml</td></tr>').join('')+'</tbody></table></div></section>';
 }
 function modal(title,content){
  $('modal-title').textContent=title; $('modal-body').innerHTML=content; $('modal-status').textContent=''; $('modal').showModal();

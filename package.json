@@ -1,1 +1,1 @@
-{"name":"impressoes-mktp","private":true,"type":"module","scripts":{"start":"node local.mjs","build":"node build.mjs","build:netlify":"node build-netlify.mjs"}}
+{"name":"impressoes-mktp","private":true,"type":"module","scripts":{"start":"node local.mjs","build":"node build.mjs","build:netlify":"node migrate-turso.mjs && node build-netlify.mjs","migrate:cloud":"node migrate-turso.mjs"}}

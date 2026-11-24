@@ -3,7 +3,9 @@ import { randomBytes } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import app from './server.mjs';
 import { openDatabase } from './sqlite.mjs';
+import { migrate } from './migrations.mjs';
 const DB=openDatabase(process.env.MKTP_DB||fileURLToPath(new URL('./mktp.sqlite',import.meta.url)));
+await migrate(DB);
 const port=Number(process.env.PORT||3017);
 const SETUP_CODE=process.env.MKTP_SETUP_CODE||randomBytes(16).toString('hex');
 createServer(async (req,res)=>{

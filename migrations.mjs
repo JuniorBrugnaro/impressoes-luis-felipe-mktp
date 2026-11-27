@@ -19,6 +19,43 @@ export const updates = [{
   ]
 }];
 
+updates.push({
+  id: '20261127_ink_sizes',
+  statements: [
+    'CREATE TABLE IF NOT EXISTS ink_sizes (name TEXT NOT NULL, size TEXT NOT NULL, microliters INTEGER CHECK(microliters >= 0), PRIMARY KEY(name,size))',
+    `WITH artworks(name) AS (VALUES
+      ('ARVORE DOURADA'),
+      ('ARVORE FLORES'),
+      ('ARVORE OURO'),
+      ('ARVORE PRETA'),
+      ('FAMILIA DE LEOES (vertical)'),
+      ('JESUS PRAIA'),
+      ('JESUS AGUAS'),
+      ('JESUS CORDEIRO'),
+      ('JESUS E MARIA'),
+      ('JESUS OLHANDO PRA CIMA'),
+      ('JESUS ONDAS'),
+      ('JESUS OVELHAS'),
+      ('LEAO 1 FILHOTE'),
+      ('LEAO 2 FILHOTES (arvore)'),
+      ('LEAO 2 FILHOTES'),
+      ('MÃO COM PÃO'),
+      ('MÃO DE JESUS'),
+      ('PATO'),
+      ('SAGRADA FAMILIA MARROM'),
+      ('SAGRADA FAMILIA VERDE'),
+      ('SAGRADA FAMILIA VERMELHA'),
+      ('SALMO 91'),
+      ('SANTA CEIA AMARELA'),
+      ('SANTA CEIA BRANCA'),
+      ('SANTA CEIA COLORIDA'),
+      ('SANTA CEIA CLASSICA'),
+      ('SANTA CEIA DOURADA MOLDURA')
+    ), sizes(size) AS (VALUES ('60x90'), ('75x95'), ('70x120'), ('70x130'))
+    INSERT OR IGNORE INTO ink_sizes(name,size) SELECT name,size FROM artworks CROSS JOIN sizes`
+  ]
+});
+
 export async function migrate(db) {
   const query = (sql, ...args) => db.prepare(sql).bind(...args);
   await query('CREATE TABLE IF NOT EXISTS app_migrations(id TEXT PRIMARY KEY)').run();

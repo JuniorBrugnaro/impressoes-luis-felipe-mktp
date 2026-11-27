@@ -66,7 +66,8 @@ async fetch(req, env) {
       if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(month||'')) throw issue('Mês inválido.');
       const [entries,materials]=await Promise.all([query('SELECT * FROM entries WHERE day>=? AND day<=? ORDER BY day,id',month+'-01',month+'-31').all(),query('SELECT * FROM materials ORDER BY name').all()]);
       const inkItems=await query('SELECT name,microliters FROM ink_items ORDER BY name').all();
-      return json({session,entries:entries.results,materials:materials.results,inkItems:inkItems.results});
+      const inkSizes=await query('SELECT name,size,microliters FROM ink_sizes ORDER BY name').all();
+      return json({session,entries:entries.results,materials:materials.results,inkItems:inkItems.results,inkSizes:inkSizes.results});
     }
     if(req.method==='POST' && path==='logout'){
       await query('DELETE FROM sessions WHERE token=?',await digest(token)).run();
@@ -78,6 +79,10 @@ async fetch(req, env) {
       const salt=random();
       const result=await query("INSERT OR IGNORE INTO accounts VALUES (?, 'USER', ?, ?)",email,salt,await hash(body.password,salt)).run();
       if(!result.meta.changes) throw issue('Este e-mail já está cadastrado.',409);
+    } else if(path==='ink-size'){
+      if(!Number.isSafeInteger(body.microliters)||body.microliters<0||typeof body.name!=='string'||typeof body.size!=='string') throw issue('Consumo ou item inválido.');
+      const result=await query('UPDATE ink_sizes SET microliters=? WHERE name=? AND size=?',body.microliters,body.name,body.size).run();
+      if(!result.meta.changes) throw issue('Item ou medida desconhecida.',404);
     } else if(path==='price'){
       if(!Number.isInteger(body.price)||body.price<0||body.price>100000000) throw issue('Preço inválido.');
       const found=await query('SELECT name FROM materials WHERE name=?',body.material).first();

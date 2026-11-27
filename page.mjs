@@ -4,6 +4,7 @@ export const html = String.raw`<!doctype html>
 <style>
 :root{color-scheme:dark;--ink:#fff5eb;--muted:#d5bfb0;--line:#eec7ac38;--accent:#ff8a43;--glass:linear-gradient(140deg,#f6d4b716,#b08e7910);font:15px Inter,"Segoe UI",sans-serif}*{box-sizing:border-box}body{margin:0;color:var(--ink);background:#1a1515 radial-gradient(ellipse at 100% 35%,#713619 0%,transparent 42%) fixed;min-height:100vh}body:before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 10% 0%,#65342f82,transparent 55%),radial-gradient(ellipse at 70% 0%,#253c3480,transparent 50%);pointer-events:none;z-index:-1}main{max-width:1350px;margin:auto;padding:32px 28px 48px}header,.bar,.section-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between}h1{font-size:clamp(21px,3vw,36px);letter-spacing:-.04em;margin:0}h2{font-size:21px;margin:0 0 18px}h3{margin:0}p{color:var(--muted)}.glass,dialog{background:var(--glass);border:1px solid var(--line);border-radius:17px;backdrop-filter:blur(18px);box-shadow:0 8px 32px #10090525}.nav,.bar,.grid,.glass{margin-top:14px}.nav{display:flex;gap:5px;overflow:auto;padding:7px}.card{padding:18px}.row{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr)}.grid .glass{margin:0}.charts{grid-template-columns:1.1fr 1fr}.kpi{display:block;font-size:clamp(23px,3vw,39px);margin-top:7px;line-height:1.1}.muted,small{color:var(--muted)}button,input,select{font:inherit;color:inherit;border:1px solid var(--line);border-radius:10px;background:#281c1b;padding:10px 12px}button{cursor:pointer;position:relative;isolation:isolate;overflow:hidden;background:#dcb19412}button:before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;background:radial-gradient(ellipse 75px 44px at var(--x,50%) var(--y,50%),#ffad67a0,transparent);transition:opacity .18s}button:hover:before,button:focus-visible:before{opacity:1}button.active,button.primary{background:#b74415;border-color:#ff9255;color:white}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}button:disabled{opacity:.5;cursor:default}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;white-space:nowrap;text-align:left}th,td{padding:10px 12px;border-bottom:1px solid var(--line)}th{color:#ffd9bc;font-weight:600;background:#f4d3bf12}tbody tr:hover{background:#ffe3ca0a}.highlight{background:#e86a211c}.material{display:grid;grid-template-columns:1fr auto;gap:7px;padding:9px 0;border-bottom:1px solid var(--line)}.chart{height:156px;display:flex;align-items:stretch;gap:8px;overflow:auto}.point{flex:1;min-width:40px;display:grid;grid-template-rows:1fr 20px;align-items:end;text-align:center}.plot{height:100%;display:flex;align-items:end;justify-content:center;border-bottom:1px solid var(--line)}.column{width:min(40px,68%);background:linear-gradient(#fb995f,#a63d16);border-radius:6px 6px 0 0;position:relative}.column span{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-weight:600}.login{max-width:475px;margin:9vh auto 0;padding:25px}form{display:grid;gap:13px}label{display:grid;gap:6px}label.check{display:flex;align-items:center}dialog{width:min(580px,calc(100% - 26px));padding:22px;background:#2c211e;color:var(--ink);max-height:88vh}dialog::backdrop{background:#0d0909a8}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid input,.form-grid select{width:100%;min-width:0}.notice{min-height:20px;margin:8px 0;color:#ffbc91}.login h1{margin-bottom:20px}.pill{border:1px solid var(--line);padding:7px 12px;border-radius:20px;color:#ffd9bc}[hidden]{display:none!important}.foot{margin:14px 0 0;font-size:13px}.summary{margin:0 0 14px}
 @media(max-width:750px){main{padding:18px 12px}.charts{grid-template-columns:1fr}.card{padding:12px}.grid{gap:8px}.grid small{font-size:12px}.nav button{flex:none}.bar{gap:9px}}@media(prefers-reduced-motion:reduce){button:before{transition:none;background:radial-gradient(ellipse at center,#ffad6760,transparent)}}
+.ink-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px}.ink-grid .card{min-width:0;margin:0}.ink-grid td:last-child,.ink-grid th:last-child{text-align:right}.ink-list{max-height:29rem;overflow:auto}.ink-list th{position:sticky;top:0;background:#49372e}.ink-reference{margin:12px 0}.ink-reference summary{cursor:pointer;padding:8px}
 </style>
 <main>
 <section id="access" class="login glass" hidden><h1>IMPRESSOES LUIS FELIPE - MKTP</h1><h2 id="access-title">Entrar</h2><p id="setup-help" hidden>Use o código de configuração para criar a primeira conta de administrador.</p><form id="login"><label id="code-field" hidden>Código de configuração<input name="code"></label><label>E-mail<input name="email" type="email" required autocomplete="username"></label><label>Senha<input name="password" type="password" minlength="12" maxlength="128" required autocomplete="current-password"></label><button class="primary">Continuar</button></form></section>
@@ -87,10 +88,29 @@ function render(){
  if(tab==='IMAGENS') result='<section class="glass card"><h2>Imagens registradas</h2>'+ (rows.filter(r=>r.image).map(r=>'<div class="material"><strong>'+esc(r.image)+'</strong><span>'+fmtDate(r.day)+'</span></div>').join('')||'<p>Nenhum nome de imagem informado neste período.</p>')+'</section>';
  $('view').innerHTML=result;
 }
+const printSizes={'60x90':'0,60 × 0,90 m','75x95':'0,75 × 0,95 m','70x120':'0,70 × 1,20 m','70x130':'0,70 × 1,30 m'};
 function inkConsumption(){
- const items=data.inkItems||[];
  const ml=new Intl.NumberFormat('pt-BR',{minimumFractionDigits:3,maximumFractionDigits:3});
- return '<section class="glass card"><h2>Consumo de tinta por impressão</h2><div class="table-wrap"><table><thead><tr><th>Item</th><th>Consumo por impressão (ml)</th></tr></thead><tbody>'+items.map(item=>'<tr><td>'+esc(item.name)+'</td><td>'+ml.format(item.microliters/1000)+' ml</td></tr>').join('')+'</tbody></table></div></section>';
+ const amount=item=>item.microliters==null?'A apurar':ml.format(item.microliters/1000)+' ml';
+ const cards=Object.entries(printSizes).map(([size,label])=>{
+  const rows=data.inkSizes.filter(item=>item.size===size).map(item=>{
+   const value=data.session.role==='ADM'?'<button data-ink="'+esc(item.name)+'" data-size="'+size+'" aria-label="Editar consumo de '+esc(item.name)+' em '+label+'">'+amount(item)+'</button>':amount(item);
+   return '<tr><td>'+esc(item.name)+'</td><td>'+value+'</td></tr>';
+  }).join('');
+  return '<section class="glass card"><h3>'+label+'</h3><div class="ink-list" tabindex="0"><table><thead><tr><th>Imagem</th><th>ml por impressão</th></tr></thead><tbody>'+rows+'</tbody></table></div></section>';
+ }).join('');
+ const refs=data.inkItems.map(item=>'<tr><td>'+esc(item.name)+'</td><td>'+amount(item)+'</td></tr>').join('');
+ return '<h2>Consumo de tinta por impressão</h2><div class="ink-grid">'+cards+'</div><details class="ink-reference glass card"><summary>Consumos anteriores sem tamanho informado</summary><table><thead><tr><th>Imagem</th><th>ml por impressão</th></tr></thead><tbody>'+refs+'</tbody></table></details>';
+}
+function editInk(name,size){
+ const item=data.inkSizes.find(row=>row.name===name&&row.size===size);
+ modal(name+' · '+printSizes[size],'<form id="ink-form"><label>Consumo por impressão (ml)<input name="ml" type="text" inputmode="decimal" placeholder="0,000" required value="'+(item.microliters==null?'':(item.microliters/1000).toFixed(3).replace('.',','))+'"></label><button class="primary">Salvar consumo</button></form>');
+ submit($('ink-form'),async fields=>{
+  const value=fields.ml.trim().replace(',','.');
+  if(!/^\d+(?:\.\d{1,3})?$/.test(value)) throw Error('Informe o consumo com até três casas decimais.');
+  await api('ink-size',{name,size,microliters:Math.round(Number(value)*1000)});
+  $('modal').close();await refresh();
+ });
 }
 function modal(title,content){
  $('modal-title').textContent=title; $('modal-body').innerHTML=content; $('modal-status').textContent=''; $('modal').showModal();
@@ -189,6 +209,7 @@ $('login').onsubmit=async e=>{
 document.addEventListener('click',async e=>{
  const b=e.target.closest('button');if(!b)return;
  try{
+  if(b.dataset.ink){editInk(b.dataset.ink,b.dataset.size);return;}
   if(b.dataset.tab){tab=b.dataset.tab;render();}
   if(b.dataset.week){week=Number(b.dataset.week);render();}
   if(b.dataset.edit){const r=data.entries.find(r=>r.id===b.dataset.edit);if(r)entry(r);}
